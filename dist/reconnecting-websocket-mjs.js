@@ -445,12 +445,13 @@ var ReconnectingWebSocket = /** @class */ (function () {
             .then(function (url) {
             // close could be called before creating the ws
             if (_this._closeCalled) {
+                _this._connectLock = false;
                 return;
             }
             _this._debug('connect', { url: url, protocols: _this._protocols });
             _this._ws = _this._protocols
-                ? new WebSocket(url, _this._protocols)
-                : new WebSocket(url);
+                ? new WebSocket(url, _this._protocols, _this._options.wsOptions)
+                : new WebSocket(url, _this._options.wsOptions);
             // @ts-ignore
             _this._ws.binaryType = _this._binaryType;
             _this._connectLock = false;

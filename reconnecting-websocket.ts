@@ -37,6 +37,7 @@ export type Options = {
     connectionTimeout?: number;
     maxRetries?: number;
     debug?: boolean;
+    wsOptions?: any;
 };
 
 const DEFAULT = {
@@ -358,10 +359,12 @@ export default class ReconnectingWebSocket {
                     this._connectLock = false;
                     return;
                 }
+
                 this._debug('connect', {url, protocols: this._protocols});
                 this._ws = this._protocols
-                    ? new WebSocket(url, this._protocols)
-                    : new WebSocket(url);
+                    ? new WebSocket(url, this._protocols, this._options.wsOptions)
+                    : new WebSocket(url, this._options.wsOptions);
+
                 // @ts-ignore
                 this._ws!.binaryType = this._binaryType;
                 this._connectLock = false;

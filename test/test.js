@@ -89,6 +89,24 @@ test.cb('pass WebSocket via options', t => {
     };
 });
 
+test.cb('pass headers via options', t => {
+    const wss = new WebSocketServer({port: PORT});
+    const ws = new ReconnectingWebSocket(URL, undefined, {
+        WebSocket,
+        wsOptions: {
+            headers: {
+                authorization: 'a',
+            },
+        },
+        maxRetries: 0,
+    });
+
+    wss.on('connection', (ss, req) => {
+        t.true(req.headers.authorization === 'a');
+        t.end();
+    });
+});
+
 test('URL provider', async t => {
     const url = 'example.com';
     const ws = new ReconnectingWebSocket(URL, undefined, {
